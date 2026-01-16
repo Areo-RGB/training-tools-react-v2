@@ -110,7 +110,7 @@ const Colors: React.FC = () => {
   if (gameState === GameState.PLAYING) {
     return (
       <FullscreenOverlay onExit={() => setGameState(GameState.CONFIG)} className={`${currentColor.class} transition-colors duration-200`}>
-        <div className="absolute top-6 left-6 text-white/80 font-mono text-xl z-50 mix-blend-difference">
+        <div className="absolute top-20 left-6 text-white/80 font-mono text-xl z-50 mix-blend-difference">
           {settings.soundControlMode ? `${timeLeft}s` : `${step} / ${settings.limitSteps}`}
         </div>
         

@@ -29,6 +29,13 @@ const ChainCalculator: React.FC = () => {
     if (level === 3) setSettings(s => ({ ...s, speed: 3, steps: 5 }));
   };
 
+  const currentLevel = (() => {
+    if (settings.speed === 5 && settings.steps === 5) return '1';
+    if (settings.speed === 5 && settings.steps === 10) return '2';
+    if (settings.speed === 3 && settings.steps === 5) return '3';
+    return 'custom';
+  })();
+
   const generateOperation = useCallback((currentTotal: number) => {
     const num = Math.floor(Math.random() * 9) + 1; // 1-9
     // Avoid negative totals
@@ -186,32 +193,76 @@ const ChainCalculator: React.FC = () => {
       <div className="grid gap-6">
         <Card>
           <h2 className="text-xl font-bold mb-4">Level Presets</h2>
-          <div className="flex gap-2 mb-6">
-            {[1, 2, 3].map(l => (
-              <button 
-                key={l}
-                onClick={() => applyLevel(l)}
-                className="flex-1 py-3 rounded-xl bg-surfaceHover border border-white/5 hover:bg-white/10 transition-colors font-bold"
-              >
-                Lvl {l}
-              </button>
-            ))}
+          <div className="mb-6">
+            <label className="text-xs font-bold text-textSecondary uppercase tracking-widest block mb-2">
+              Level auswählen
+            </label>
+            <select
+              value={currentLevel}
+              onChange={(e) => {
+                const level = Number(e.target.value);
+                if (!Number.isNaN(level)) applyLevel(level);
+              }}
+              className="w-full bg-surfaceHover border border-white/10 rounded-xl px-4 py-3 font-bold text-textPrimary focus:outline-none focus:border-white/20"
+            >
+              <option value="1">Lvl 1 (5s / 5)</option>
+              <option value="2">Lvl 2 (5s / 10)</option>
+              <option value="3">Lvl 3 (3s / 5)</option>
+              <option value="custom">Custom</option>
+            </select>
           </div>
           
-          <div className="space-y-6">
-            <Slider 
-              label="Geschwindigkeit (Sekunden pro Zahl)" 
-              value={settings.speed} 
-              min={1} max={10} step={0.5}
-              onChange={(v) => setSettings(s => ({...s, speed: v}))}
-              formatValue={(v) => `${v}s`}
-            />
-            <Slider 
-              label="Anzahl Aufgaben" 
-              value={settings.steps} 
-              min={3} max={50}
-              onChange={(v) => setSettings(s => ({...s, steps: v}))}
-            />
+          <div className="grid gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="flex flex-col items-center gap-4">
+                <span className="text-xs font-bold text-textSecondary uppercase tracking-widest">Geschwindigkeit (Sekunden)</span>
+                <div className="flex items-center gap-6">
+                  <button
+                    onClick={() => setSettings(s => ({ ...s, speed: Math.max(1, s.speed - 1) }))}
+                    className="w-12 h-12 rounded-full bg-surfaceHover border border-white/10 text-xl font-bold hover:bg-white/10 transition-colors"
+                    aria-label="Geschwindigkeit verringern"
+                  >
+                    -
+                  </button>
+                  <div className="text-4xl font-bold font-mono tabular-nums text-textPrimary">
+                    {settings.speed}s
+                  </div>
+                  <button
+                    onClick={() => setSettings(s => ({ ...s, speed: Math.min(10, s.speed + 1) }))}
+                    className="w-12 h-12 rounded-full bg-surfaceHover border border-white/10 text-xl font-bold hover:bg-white/10 transition-colors"
+                    aria-label="Geschwindigkeit erhöhen"
+                  >
+                    +
+                  </button>
+                </div>
+                <span className="text-xs text-textTertiary">1–10 s</span>
+              </div>
+
+              <div className="flex flex-col items-center gap-4">
+                <span className="text-xs font-bold text-textSecondary uppercase tracking-widest">Aufgaben</span>
+                <div className="flex items-center gap-6">
+                  <button
+                    onClick={() => setSettings(s => ({ ...s, steps: Math.max(3, s.steps - 1) }))}
+                    className="w-12 h-12 rounded-full bg-surfaceHover border border-white/10 text-xl font-bold hover:bg-white/10 transition-colors"
+                    aria-label="Aufgaben verringern"
+                  >
+                    -
+                  </button>
+                  <div className="text-4xl font-bold font-mono tabular-nums text-textPrimary">
+                    {settings.steps}
+                  </div>
+                  <button
+                    onClick={() => setSettings(s => ({ ...s, steps: Math.min(50, s.steps + 1) }))}
+                    className="w-12 h-12 rounded-full bg-surfaceHover border border-white/10 text-xl font-bold hover:bg-white/10 transition-colors"
+                    aria-label="Aufgaben erhöhen"
+                  >
+                    +
+                  </button>
+                </div>
+                <span className="text-xs text-textTertiary">3–50</span>
+              </div>
+            </div>
+
             <Toggle 
               label="Sound bei neuer Zahl"
               checked={settings.playBeep}
