@@ -1,0 +1,7 @@
+{
+  "name": "Training Tools",
+  "description": "A comprehensive suite of cognitive and physical training tools including sound counters, reaction trainers, math challenges, and timers.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
