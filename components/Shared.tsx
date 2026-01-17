@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
-import { ArrowLeft, ArrowUp, ArrowDown } from 'lucide-react';
+import ArrowLeft from 'lucide-react/dist/esm/icons/arrow-left';
+import ArrowUp from 'lucide-react/dist/esm/icons/arrow-up';
+import ArrowDown from 'lucide-react/dist/esm/icons/arrow-down';
 import { Link, useLocation } from 'react-router-dom';
 
 // --- Layout ---
@@ -77,7 +79,7 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', s
 };
 
 export const Card: React.FC<{ children: ReactNode; className?: string; onClick?: () => void }> = ({ children, className = '', onClick }) => {
-  const baseClass = `bg-surface border border-white/5 rounded-2xl p-6 shadow-xl ${onClick ? 'cursor-pointer hover:border-white/10 hover:translate-y-[-2px] transition-all duration-300' : ''} ${className}`;
+  const baseClass = `bg-surface border-r border-t border-b border-white/5 rounded-2xl p-6 shadow-xl ${onClick ? 'cursor-pointer hover:border-white/10 hover:translate-y-[-2px] transition-all duration-300' : ''} ${className}`;
 
   if (onClick) {
     return (

@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Timer, Plus, Trash2, Play, Pause, RotateCcw } from 'lucide-react';
+import Timer from 'lucide-react/dist/esm/icons/timer';
+import Plus from 'lucide-react/dist/esm/icons/plus';
+import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
+import Play from 'lucide-react/dist/esm/icons/play';
+import Pause from 'lucide-react/dist/esm/icons/pause';
+import RotateCcw from 'lucide-react/dist/esm/icons/rotate-ccw';
 import { Button, Card, NumberStepper, FullscreenOverlay } from '../components/Shared';
 import { useAudio } from '../hooks/useAudio';
 import useLocalStorage from '../hooks/useLocalStorage';

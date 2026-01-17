@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Calculator, Check, X, RotateCcw } from 'lucide-react';
+import Calculator from 'lucide-react/dist/esm/icons/calculator';
+import Check from 'lucide-react/dist/esm/icons/check';
+import X from 'lucide-react/dist/esm/icons/x';
+import RotateCcw from 'lucide-react/dist/esm/icons/rotate-ccw';
 import { Button, Card, Slider, Toggle, NumberStepper } from '../components/Shared';
 import { useAudio } from '../hooks/useAudio';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -136,7 +139,7 @@ const ChainCalculator: React.FC = () => {
            ))}
            <button onClick={handleClear} className="h-20 bg-red-900/50 text-red-200 rounded-xl text-xl font-bold hover:bg-red-900/70">C</button>
            <button onClick={() => handleNumpad(0)} className="h-20 bg-surfaceHover rounded-xl text-2xl font-bold hover:bg-white/20">0</button>
-           <button onClick={submitAnswer} className="h-20 bg-green-600 text-white rounded-xl text-xl font-bold hover:bg-green-500">
+           <button onClick={submitAnswer} className="h-20 bg-green-600 text-white rounded-xl text-xl font-bold hover:bg-green-500 flex items-center justify-center">
              <Check />
            </button>
          </div>

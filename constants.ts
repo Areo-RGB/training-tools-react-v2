@@ -1,4 +1,9 @@
-import { Mic, Droplet, Calculator, Timer, Clock, MapPin } from 'lucide-react';
+import Mic from 'lucide-react/dist/esm/icons/mic';
+import Droplet from 'lucide-react/dist/esm/icons/droplet';
+import Calculator from 'lucide-react/dist/esm/icons/calculator';
+import Timer from 'lucide-react/dist/esm/icons/timer';
+import Clock from 'lucide-react/dist/esm/icons/clock';
+import MapPin from 'lucide-react/dist/esm/icons/map-pin';
 
 export const EUROPEAN_CAPITALS = [
   { country: 'Albanien', city: 'Tirana' },
@@ -65,7 +70,7 @@ export const TOOLS = [
     path: '/sound-counter',
     icon: Mic,
     tags: ['AUDIO', 'TRIGGER'],
-    accentColor: 'border-blue-500'
+    accentColor: 'border-l-blue-500'
   },
   {
     id: 'farben',
@@ -74,7 +79,7 @@ export const TOOLS = [
     path: '/farben',
     icon: Droplet,
     tags: ['KOGNITIV', 'REAKTION'],
-    accentColor: 'border-purple-500'
+    accentColor: 'border-l-purple-500'
   },
   {
     id: 'kettenrechner',
@@ -83,7 +88,7 @@ export const TOOLS = [
     path: '/kettenrechner',
     icon: Calculator,
     tags: ['MATHE', 'FOKUS'],
-    accentColor: 'border-green-500'
+    accentColor: 'border-l-green-500'
   },
   {
     id: 'timers',
@@ -92,7 +97,7 @@ export const TOOLS = [
     path: '/timers',
     icon: Timer,
     tags: ['WERKZEUG', 'INTERVALL'],
-    accentColor: 'border-orange-500'
+    accentColor: 'border-l-orange-500'
   },
   {
     id: 'intervall',
@@ -101,7 +106,7 @@ export const TOOLS = [
     path: '/intervall',
     icon: Clock,
     tags: ['AUDIO', 'TAKT'],
-    accentColor: 'border-cyan-500'
+    accentColor: 'border-l-cyan-500'
   },
   {
     id: 'capitals',
@@ -110,6 +115,6 @@ export const TOOLS = [
     path: '/capitals',
     icon: MapPin,
     tags: ['GEOGRAPHIE', 'GEDÄCHTNIS'],
-    accentColor: 'border-indigo-500'
+    accentColor: 'border-l-indigo-500'
   }
 ];

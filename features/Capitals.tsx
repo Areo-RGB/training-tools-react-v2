@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Expand, Pause, RotateCcw } from 'lucide-react';
+import MapPin from 'lucide-react/dist/esm/icons/map-pin';
+import Expand from 'lucide-react/dist/esm/icons/expand';
+import Pause from 'lucide-react/dist/esm/icons/pause';
+import RotateCcw from 'lucide-react/dist/esm/icons/rotate-ccw';
 import { Button, Card, Slider, FullscreenOverlay } from '../components/Shared';
 import { useAudio } from '../hooks/useAudio';
 import useLocalStorage from '../hooks/useLocalStorage';

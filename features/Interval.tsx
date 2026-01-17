@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Volume2, Play, Pause } from 'lucide-react';
+import Clock from 'lucide-react/dist/esm/icons/clock';
+import Volume2 from 'lucide-react/dist/esm/icons/volume-2';
+import Play from 'lucide-react/dist/esm/icons/play';
+import Pause from 'lucide-react/dist/esm/icons/pause';
 import { Button, Card, NumberStepper, Toggle } from '../components/Shared';
 import { useAudio } from '../hooks/useAudio';
 import useLocalStorage from '../hooks/useLocalStorage';

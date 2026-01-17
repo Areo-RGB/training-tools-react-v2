@@ -1,27 +1,38 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Shared';
 import Home from './features/Home';
-import SoundCounter from './features/SoundCounter';
-import Colors from './features/Colors';
-import ChainCalculator from './features/ChainCalculator';
-import Timers from './features/Timers';
-import Interval from './features/Interval';
-import Capitals from './features/Capitals';
+
+// Lazy-load feature components for better code splitting
+const SoundCounter = lazy(() => import('./features/SoundCounter'));
+const Colors = lazy(() => import('./features/Colors'));
+const ChainCalculator = lazy(() => import('./features/ChainCalculator'));
+const Timers = lazy(() => import('./features/Timers'));
+const Interval = lazy(() => import('./features/Interval'));
+const Capitals = lazy(() => import('./features/Capitals'));
 
 const App: React.FC = () => {
   return (
     <HashRouter>
       <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/sound-counter" element={<SoundCounter />} />
-          <Route path="/farben" element={<Colors />} />
-          <Route path="/kettenrechner" element={<ChainCalculator />} />
-          <Route path="/timers" element={<Timers />} />
-          <Route path="/intervall" element={<Interval />} />
-          <Route path="/capitals" element={<Capitals />} />
-        </Routes>
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-[50vh]">
+            <div className="text-center">
+              <div className="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+              <p className="text-textSecondary font-medium">Lädt...</p>
+            </div>
+          </div>
+        }>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/sound-counter" element={<SoundCounter />} />
+            <Route path="/farben" element={<Colors />} />
+            <Route path="/kettenrechner" element={<ChainCalculator />} />
+            <Route path="/timers" element={<Timers />} />
+            <Route path="/intervall" element={<Interval />} />
+            <Route path="/capitals" element={<Capitals />} />
+          </Routes>
+        </Suspense>
       </Layout>
     </HashRouter>
   );

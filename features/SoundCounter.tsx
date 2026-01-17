@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Mic, Expand, RotateCcw, Pause } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback, startTransition } from 'react';
+import Mic from 'lucide-react/dist/esm/icons/mic';
+import Expand from 'lucide-react/dist/esm/icons/expand';
+import RotateCcw from 'lucide-react/dist/esm/icons/rotate-ccw';
+import Pause from 'lucide-react/dist/esm/icons/pause';
 import { Button, Card, Slider, AudioLevelBar, FullscreenOverlay } from '../components/Shared';
 import { useMicrophone } from '../hooks/useMicrophone';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -20,12 +23,13 @@ const SoundCounter: React.FC = () => {
   const triggersRef = useRef<number[]>([]);
   const lastTriggerRef = useRef(0);
 
-  const handleTrigger = () => {
+  // Memoize handleTrigger to prevent useMicrophone effect re-runs
+  const handleTrigger = useCallback(() => {
     const now = Date.now();
     setCount(c => c + 1);
     triggersRef.current.push(now);
     lastTriggerRef.current = now;
-  };
+  }, []);
 
   const { level, error, permissionGranted } = useMicrophone({
     threshold: settings.threshold,
@@ -34,14 +38,17 @@ const SoundCounter: React.FC = () => {
     onTrigger: handleTrigger
   });
 
-  // Calculate rate
+  // Calculate rate with transitions for non-urgent updates
   useEffect(() => {
     if (gameState !== GameState.PLAYING) return;
     const interval = setInterval(() => {
       const now = Date.now();
       // Keep triggers from last 1000ms
       triggersRef.current = triggersRef.current.filter(t => now - t <= 1000);
-      setTriggerRate(triggersRef.current.length);
+      // Use transition for non-blocking UI updates
+      startTransition(() => {
+        setTriggerRate(triggersRef.current.length);
+      });
     }, 100);
     return () => clearInterval(interval);
   }, [gameState]);

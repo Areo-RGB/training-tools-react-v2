@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Droplet, Mic } from 'lucide-react';
+import Droplet from 'lucide-react/dist/esm/icons/droplet';
+import Mic from 'lucide-react/dist/esm/icons/mic';
 import { Button, Card, Slider, Toggle, FullscreenOverlay, AudioLevelBar } from '../components/Shared';
 import { useMicrophone } from '../hooks/useMicrophone';
 import { useAudio } from '../hooks/useAudio';
@@ -28,30 +29,8 @@ const Colors: React.FC = () => {
   const [waitingForSound, setWaitingForSound] = useState(false);
 
   const { playBeep } = useAudio();
-  
-  // Microphone for Sound Control Mode or Overlay Counter
-  const isMicActive = gameState === GameState.PLAYING && (settings.soundControlMode || settings.useSoundCounter);
-  
-  const handleMicTrigger = () => {
-    if (settings.soundControlMode) {
-      if (waitingForSound) {
-        setWaitingForSound(false);
-        nextColor();
-      }
-    }
-    
-    if (settings.useSoundCounter) {
-      setTriggerCount(c => c + 1);
-    }
-  };
 
-  const { level } = useMicrophone({
-    threshold: settings.soundThreshold,
-    cooldown: settings.soundCooldown,
-    active: isMicActive,
-    onTrigger: handleMicTrigger
-  });
-
+  // Memoize nextColor first as it's used by handleMicTrigger
   const nextColor = useCallback(() => {
     // Stroop effect: Ideally we could show text != color, but the prompt says "colors flash".
     // Usually Stroop implies mismatch. Let's just pick a random color object.
@@ -60,6 +39,30 @@ const Colors: React.FC = () => {
     setStep(s => s + 1);
     if (settings.playSound) playBeep(600, 0.1);
   }, [settings.playSound, playBeep]);
+
+  // Memoize handleMicTrigger to prevent useMicrophone effect re-runs
+  const handleMicTrigger = useCallback(() => {
+    if (settings.soundControlMode) {
+      if (waitingForSound) {
+        setWaitingForSound(false);
+        nextColor();
+      }
+    }
+
+    if (settings.useSoundCounter) {
+      setTriggerCount(c => c + 1);
+    }
+  }, [settings.soundControlMode, settings.useSoundCounter, waitingForSound, nextColor]);
+
+  // Microphone for Sound Control Mode or Overlay Counter
+  const isMicActive = gameState === GameState.PLAYING && (settings.soundControlMode || settings.useSoundCounter);
+
+  const { level } = useMicrophone({
+    threshold: settings.soundThreshold,
+    cooldown: settings.soundCooldown,
+    active: isMicActive,
+    onTrigger: handleMicTrigger
+  });
 
   // Game Loop
   useEffect(() => {
