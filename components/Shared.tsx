@@ -35,10 +35,10 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       {/* Scroll Controls */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-2 opacity-50 hover:opacity-100 transition-opacity">
-        <button onClick={scrollToTop} className="p-2 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover">
+        <button type="button" onClick={scrollToTop} aria-label="Nach oben scrollen" className="p-2 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover">
           <ArrowUp size={20} />
         </button>
-        <button onClick={scrollToBottom} className="p-2 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover">
+        <button type="button" onClick={scrollToBottom} aria-label="Nach unten scrollen" className="p-2 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover">
           <ArrowDown size={20} />
         </button>
       </div>
@@ -76,14 +76,23 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', s
   );
 };
 
-export const Card: React.FC<{ children: ReactNode; className?: string; onClick?: () => void }> = ({ children, className = '', onClick }) => (
-  <div 
-    onClick={onClick}
-    className={`bg-surface border border-white/5 rounded-2xl p-6 shadow-xl ${onClick ? 'cursor-pointer hover:border-white/10 hover:translate-y-[-2px] transition-all duration-300' : ''} ${className}`}
-  >
-    {children}
-  </div>
-);
+export const Card: React.FC<{ children: ReactNode; className?: string; onClick?: () => void }> = ({ children, className = '', onClick }) => {
+  const baseClass = `bg-surface border border-white/5 rounded-2xl p-6 shadow-xl ${onClick ? 'cursor-pointer hover:border-white/10 hover:translate-y-[-2px] transition-all duration-300' : ''} ${className}`;
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={`${baseClass} w-full text-left`}>
+        {children}
+      </button>
+    );
+  }
+
+  return (
+    <div className={baseClass}>
+      {children}
+    </div>
+  );
+};
 
 // --- Form Elements ---
 
@@ -121,18 +130,21 @@ export const Toggle: React.FC<{
   checked: boolean;
   onChange: (checked: boolean) => void;
 }> = ({ label, description, checked, onChange }) => (
-  <div
-    className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/5"
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    className="w-full flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/5"
     onClick={() => onChange(!checked)}
   >
-    <div>
+    <div className="text-left">
       <div className="font-bold text-textPrimary">{label}</div>
       {description ? <div className="text-sm text-textTertiary mt-0.5">{description}</div> : null}
     </div>
     <div className={`w-12 h-7 rounded-full transition-colors relative ${checked ? 'bg-success' : 'bg-surfaceHover'}`}>
       <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${checked ? 'translate-x-5' : ''}`} />
     </div>
-  </div>
+  </button>
 );
 
 export const NumberStepper: React.FC<{
@@ -147,15 +159,19 @@ export const NumberStepper: React.FC<{
     {label ? <span className="text-xs font-bold text-textSecondary uppercase tracking-wider">{label}</span> : null}
     <div className="flex items-center gap-4">
       <button 
+        type="button"
         onClick={() => Math.max(min, value - step) !== value && onChange(Math.max(min, value - step))}
         className="w-12 h-12 rounded-full bg-surfaceHover hover:bg-white/20 flex items-center justify-center text-xl font-bold transition-colors"
+        aria-label={label ? `${label} verringern` : 'Wert verringern'}
       >
         -
       </button>
       <span className="text-4xl font-bold tabular-nums w-24 text-center">{value}</span>
       <button 
+        type="button"
         onClick={() => Math.min(max, value + step) !== value && onChange(Math.min(max, value + step))}
         className="w-12 h-12 rounded-full bg-surfaceHover hover:bg-white/20 flex items-center justify-center text-xl font-bold transition-colors"
+        aria-label={label ? `${label} erhöhen` : 'Wert erhöhen'}
       >
         +
       </button>
@@ -185,7 +201,9 @@ export const AudioLevelBar: React.FC<{ level: number; threshold: number }> = ({ 
 export const FullscreenOverlay: React.FC<{ children: ReactNode; onExit: () => void; className?: string }> = ({ children, onExit, className = '' }) => (
   <div className={`fixed inset-0 z-50 bg-background flex flex-col ${className}`}>
     <button 
+      type="button"
       onClick={onExit}
+      aria-label="Schließen"
       className="absolute top-20 right-6 p-4 bg-white/10 rounded-full hover:bg-white/20 backdrop-blur-sm z-50 transition-colors group"
     >
       <div className="w-6 h-6 flex flex-col justify-center items-center gap-1.5 group-hover:gap-0 transition-all">
