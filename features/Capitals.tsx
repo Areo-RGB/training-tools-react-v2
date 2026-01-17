@@ -76,12 +76,12 @@ const Capitals: React.FC = () => {
            
            <h3 className="text-textSecondary uppercase tracking-widest font-bold">Hauptstadt von</h3>
            
-           <div className={`font-black text-primary ${isFullscreen ? 'text-[10vw]' : 'text-5xl md:text-7xl'}`}>
+           <div className={`font-black text-primary ${isFullscreen ? 'text-[10vw]' : 'text-4xl sm:text-5xl md:text-7xl'}`}>
              {currentQ.country}
            </div>
 
            <div className={`transition-all duration-500 ${showAnswer ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <div className={`font-bold text-green-400 ${isFullscreen ? 'text-[8vw]' : 'text-4xl md:text-6xl'}`}>
+              <div className={`font-bold text-green-400 ${isFullscreen ? 'text-[8vw]' : 'text-3xl sm:text-4xl md:text-6xl'}`}>
                 {currentQ.city}
               </div>
            </div>
@@ -112,9 +112,9 @@ const Capitals: React.FC = () => {
 
   if (gameState === GameState.FINISHED) {
     return (
-      <div className="text-center py-20 animate-enter space-y-6">
-        <div className="text-6xl">🎉</div>
-        <h2 className="text-4xl font-bold">Quiz Beendet!</h2>
+      <div className="text-center py-16 sm:py-20 animate-enter space-y-6">
+        <div className="text-5xl sm:text-6xl">🎉</div>
+        <h2 className="text-3xl sm:text-4xl font-bold">Quiz Beendet!</h2>
         <p className="text-textSecondary">Du hast {questions.length} Länder gemeistert.</p>
         <div className="flex justify-center gap-4">
           <Button variant="secondary" onClick={() => setGameState(GameState.CONFIG)}>Menü</Button>
@@ -131,7 +131,7 @@ const Capitals: React.FC = () => {
           <MapPin size={32} />
         </div>
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-violet-400">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-violet-400">
             Hauptstädte Quiz
           </h1>
           <p className="text-textSecondary">

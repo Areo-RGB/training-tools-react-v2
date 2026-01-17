@@ -109,8 +109,8 @@ const ChainCalculator: React.FC = () => {
 
   if (gameState === GameState.PLAYING) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-enter">
-         <div className="text-xl text-textSecondary font-mono">
+      <div className="flex flex-col items-center justify-center min-h-[50vh] sm:min-h-[60vh] space-y-6 sm:space-y-8 animate-enter">
+         <div className="text-lg sm:text-xl text-textSecondary font-mono">
             Schritt {Math.min(currentStep, settings.steps)} / {settings.steps}
          </div>
          <div 
@@ -128,18 +128,18 @@ const ChainCalculator: React.FC = () => {
 
   if (gameState === GameState.PENDING) {
      return (
-       <div className="max-w-md mx-auto py-12 animate-enter">
-         <div className="text-8xl font-bold text-center mb-12 text-primary animate-pulse">?</div>
+       <div className="max-w-md mx-auto py-8 sm:py-12 animate-enter">
+         <div className="text-6xl sm:text-7xl md:text-8xl font-bold text-center mb-8 sm:mb-12 text-primary animate-pulse">?</div>
          <div className="bg-surface rounded-2xl p-2 mb-4 border border-white/10">
-           <div className="text-4xl font-mono text-center py-4 h-20">{userAnswer}</div>
+           <div className="text-3xl sm:text-4xl font-mono text-center py-4 h-16 sm:h-20">{userAnswer}</div>
          </div>
          <div className="grid grid-cols-3 gap-2">
            {[1,2,3,4,5,6,7,8,9].map(n => (
-             <button key={n} onClick={() => handleNumpad(n)} className="h-20 bg-surfaceHover rounded-xl text-2xl font-bold hover:bg-white/20">{n}</button>
+             <button key={n} onClick={() => handleNumpad(n)} className="h-16 sm:h-20 bg-surfaceHover rounded-xl text-xl sm:text-2xl font-bold hover:bg-white/20">{n}</button>
            ))}
-           <button onClick={handleClear} className="h-20 bg-red-900/50 text-red-200 rounded-xl text-xl font-bold hover:bg-red-900/70">C</button>
-           <button onClick={() => handleNumpad(0)} className="h-20 bg-surfaceHover rounded-xl text-2xl font-bold hover:bg-white/20">0</button>
-           <button onClick={submitAnswer} className="h-20 bg-green-600 text-white rounded-xl text-xl font-bold hover:bg-green-500 flex items-center justify-center">
+           <button onClick={handleClear} className="h-16 sm:h-20 bg-red-900/50 text-red-200 rounded-xl text-lg sm:text-xl font-bold hover:bg-red-900/70">C</button>
+           <button onClick={() => handleNumpad(0)} className="h-16 sm:h-20 bg-surfaceHover rounded-xl text-xl sm:text-2xl font-bold hover:bg-white/20">0</button>
+           <button onClick={submitAnswer} className="h-16 sm:h-20 bg-green-600 text-white rounded-xl text-lg sm:text-xl font-bold hover:bg-green-500 flex items-center justify-center">
              <Check />
            </button>
          </div>
@@ -149,11 +149,11 @@ const ChainCalculator: React.FC = () => {
 
   if (gameState === GameState.FINISHED) {
     return (
-      <div className="text-center py-12 animate-enter space-y-8">
-        <div className="text-6xl">{isCorrect ? '🎉' : '❌'}</div>
-        <h2 className="text-3xl font-bold">{isCorrect ? 'Korrekt!' : 'Falsch!'}</h2>
+      <div className="text-center py-8 sm:py-12 animate-enter space-y-6 sm:space-y-8">
+        <div className="text-5xl sm:text-6xl">{isCorrect ? '🎉' : '❌'}</div>
+        <h2 className="text-2xl sm:text-3xl font-bold">{isCorrect ? 'Korrekt!' : 'Falsch!'}</h2>
         
-        <div className={`text-[8rem] font-bold leading-none ${isCorrect ? 'text-green-500' : 'text-blue-500'}`}>
+        <div className={`text-5xl sm:text-6xl md:text-8xl font-bold leading-none ${isCorrect ? 'text-green-500' : 'text-blue-500'}`}>
           {runningTotal}
         </div>
         
@@ -184,7 +184,7 @@ const ChainCalculator: React.FC = () => {
           <Calculator size={32} />
         </div>
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-400">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-400">
             Kettenrechner
           </h1>
           <p className="text-textSecondary">

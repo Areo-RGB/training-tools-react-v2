@@ -101,7 +101,7 @@ const SoundCounter: React.FC = () => {
           <Mic size={32} />
         </div>
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">
             Sound-Zähler
           </h1>
           <p className="text-textSecondary">
@@ -160,7 +160,7 @@ const SoundCounter: React.FC = () => {
       ) : (
         <div className="space-y-6">
           <div className="text-center py-12">
-            <div key={count} className="text-[150px] font-black leading-none text-primary tabular-nums transition-transform duration-75 scale-100 data-[trigger=true]:scale-110" data-trigger={Date.now() - lastTriggerRef.current < 100}>
+            <div key={count} className="text-7xl sm:text-8xl md:text-9xl lg:text-[150px] font-black leading-none text-primary tabular-nums transition-transform duration-75 scale-100 data-[trigger=true]:scale-110" data-trigger={Date.now() - lastTriggerRef.current < 100}>
               {count}
             </div>
             <div className="text-2xl text-textSecondary font-mono mt-2">{triggerRate} / sec</div>

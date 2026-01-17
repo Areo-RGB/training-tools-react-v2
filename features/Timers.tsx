@@ -56,7 +56,7 @@ const SingleTimer: React.FC<{
   };
 
   return (
-    <Card className="flex flex-col items-center justify-between min-h-[250px] relative overflow-hidden">
+    <Card className="flex flex-col items-center justify-between min-h-[200px] sm:min-h-[250px] relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-white/10">
         <div className="h-full bg-orange-500 transition-all duration-1000" style={{ width: `${(timeLeft/duration)*100}%` }} />
       </div>
@@ -69,8 +69,8 @@ const SingleTimer: React.FC<{
               ))}
             </div>
         )}
-        <div 
-          className={`text-6xl font-black tabular-nums transition-colors ${timeLeft === 0 ? 'text-green-500' : 'text-textPrimary'}`}
+        <div
+          className={`text-4xl sm:text-5xl md:text-6xl font-black tabular-nums transition-colors ${timeLeft === 0 ? 'text-green-500' : 'text-textPrimary'}`}
           onClick={() => !isActive && !label && setDuration(d => d + 15)} // Simple way to inc
         >
           {formatTime(timeLeft)}
@@ -187,7 +187,7 @@ const Timers: React.FC = () => {
           <Timer size={32} />
         </div>
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-400">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-400">
             Timer & Sequenzen
           </h1>
           <p className="text-textSecondary">
@@ -210,17 +210,17 @@ const Timers: React.FC = () => {
         ))}
 
         {/* Creator Card */}
-        <Card className="border-dashed border-2 border-white/10 flex flex-col items-center justify-center min-h-[250px] cursor-pointer hover:bg-white/5 transition-colors" onClick={() => setShowCreator(true)}>
-           <Plus size={48} className="text-white/20 mb-4" />
-           <span className="font-bold text-textSecondary">Neue Sequenz erstellen</span>
+        <Card className="border-dashed border-2 border-white/10 flex flex-col items-center justify-center min-h-[200px] sm:min-h-[250px] cursor-pointer hover:bg-white/5 transition-colors" onClick={() => setShowCreator(true)}>
+           <Plus size={40} className="text-white/20 mb-4" />
+           <span className="text-sm sm:text-base font-bold text-textSecondary text-center px-4">Neue Sequenz erstellen</span>
         </Card>
       </div>
 
       {/* Creator Modal (Inline for simplicity) */}
       {showCreator && (
-        <FullscreenOverlay onExit={() => setShowCreator(false)} className="bg-background/95 p-6 md:p-12 overflow-y-auto">
-          <div className="max-w-xl mx-auto w-full space-y-8 animate-enter">
-            <h2 className="text-3xl font-bold">Sequenz Erstellen</h2>
+        <FullscreenOverlay onExit={() => setShowCreator(false)} className="bg-background/95 p-4 sm:p-6 md:p-12 overflow-y-auto">
+          <div className="max-w-xl mx-auto w-full space-y-6 sm:space-y-8 animate-enter">
+            <h2 className="text-2xl sm:text-3xl font-bold">Sequenz Erstellen</h2>
             
             <div className="space-y-4">
               <div>

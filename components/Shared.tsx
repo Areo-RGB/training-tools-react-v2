@@ -15,32 +15,32 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen relative font-sans text-textPrimary selection:bg-primary selection:text-white">
       {/* Ambient Background */}
-      <div className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
-      <div className="fixed bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="fixed top-[-20%] left-[-10%] w-[50vw] h-[50vw] max-w-[400px] max-h-[400px] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="fixed bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] max-w-[400px] max-h-[400px] bg-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Navbar */}
       {!isHome ? (
         <nav className="sticky top-0 z-40 w-full border-b border-white/5 bg-background/80 backdrop-blur-md animate-enter">
-          <div className="max-w-4xl mx-auto px-4 h-16 flex items-center">
+          <div className="max-w-4xl mx-auto px-4 h-14 sm:h-16 flex items-center">
             <Link to="/" className="flex items-center gap-2 text-textSecondary hover:text-textPrimary transition-colors">
               <ArrowLeft size={20} />
-              <span className="font-medium tracking-wide uppercase text-sm">Zurück zum Menü</span>
+              <span className="font-medium tracking-wide uppercase text-xs sm:text-sm">Zurück zum Menü</span>
             </Link>
           </div>
         </nav>
       ) : null}
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-4xl mx-auto px-4 py-8 md:py-12">
+      <main className="relative z-10 max-w-4xl mx-auto px-4 py-6 sm:py-8 md:py-12">
         {children}
       </main>
 
       {/* Scroll Controls */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-2 opacity-50 hover:opacity-100 transition-opacity">
-        <button type="button" onClick={scrollToTop} aria-label="Nach oben scrollen" className="p-2 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover">
+        <button type="button" onClick={scrollToTop} aria-label="Nach oben scrollen" className="p-3 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover min-w-[44px] min-h-[44px]">
           <ArrowUp size={20} />
         </button>
-        <button type="button" onClick={scrollToBottom} aria-label="Nach unten scrollen" className="p-2 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover">
+        <button type="button" onClick={scrollToBottom} aria-label="Nach unten scrollen" className="p-3 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover min-w-[44px] min-h-[44px]">
           <ArrowDown size={20} />
         </button>
       </div>
@@ -79,7 +79,7 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', s
 };
 
 export const Card: React.FC<{ children: ReactNode; className?: string; onClick?: () => void }> = ({ children, className = '', onClick }) => {
-  const baseClass = `bg-surface border-r border-t border-b border-white/5 rounded-2xl p-6 shadow-xl ${onClick ? 'cursor-pointer hover:border-white/10 hover:translate-y-[-2px] transition-all duration-300' : ''} ${className}`;
+  const baseClass = `bg-surface border-r border-t border-b border-white/5 rounded-2xl p-4 sm:p-6 shadow-xl ${onClick ? 'cursor-pointer hover:border-white/10 hover:translate-y-[-2px] transition-all duration-300' : ''} ${className}`;
 
   if (onClick) {
     return (
@@ -202,11 +202,11 @@ export const AudioLevelBar: React.FC<{ level: number; threshold: number }> = ({ 
 // --- Overlay ---
 export const FullscreenOverlay: React.FC<{ children: ReactNode; onExit: () => void; className?: string }> = ({ children, onExit, className = '' }) => (
   <div className={`fixed inset-0 z-50 bg-background flex flex-col ${className}`}>
-    <button 
+    <button
       type="button"
       onClick={onExit}
       aria-label="Schließen"
-      className="absolute top-20 right-6 p-4 bg-white/10 rounded-full hover:bg-white/20 backdrop-blur-sm z-50 transition-colors group"
+      className="absolute top-16 right-4 sm:top-20 sm:right-6 p-4 bg-white/10 rounded-full hover:bg-white/20 backdrop-blur-sm z-50 transition-colors group min-w-[44px] min-h-[44px]"
     >
       <div className="w-6 h-6 flex flex-col justify-center items-center gap-1.5 group-hover:gap-0 transition-all">
         <span className="w-6 h-0.5 bg-white rotate-45 translate-y-1 group-hover:rotate-0 group-hover:translate-y-0 transition-transform" />

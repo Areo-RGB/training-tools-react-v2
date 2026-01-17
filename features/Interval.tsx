@@ -45,7 +45,7 @@ const Interval: React.FC = () => {
           <Clock size={32} />
         </div>
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
             Intervall
           </h1>
           <p className="text-textSecondary">
@@ -55,8 +55,8 @@ const Interval: React.FC = () => {
       </div>
 
       <div className="grid gap-8 max-w-xl mx-auto">
-         <Card className="flex flex-col items-center gap-8 py-12">
-            <div className={`w-64 h-64 rounded-full border-4 flex items-center justify-center transition-all duration-300 ${active ? 'border-cyan-400 shadow-[0_0_50px_rgba(34,211,238,0.3)]' : 'border-white/5'}`}>
+         <Card className="flex flex-col items-center gap-6 sm:gap-8 py-8 sm:py-12">
+            <div className={`w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-full border-4 flex items-center justify-center transition-all duration-300 ${active ? 'border-cyan-400 shadow-[0_0_50px_rgba(34,211,238,0.3)]' : 'border-white/5'}`}>
                <NumberStepper 
                  value={settings.interval} 
                  onChange={(v) => setSettings(s => ({...s, interval: v}))} 
