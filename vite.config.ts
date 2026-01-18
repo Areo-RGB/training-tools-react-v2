@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
             description: 'Trainingstools für mentale Fitness',
             theme_color: '#0a0a0f',
             background_color: '#0a0a0f',
-            display: 'standalone',
+            display: 'fullscreen',
             orientation: 'portrait',
             start_url: '/',
             icons: [
@@ -42,7 +42,42 @@ export default defineConfig(({ mode }) => {
             ]
           },
           workbox: {
-            globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}']
+            globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,json,webmanifest,wav,mp3,ogg}'],
+            runtimeCaching: [
+              {
+                urlPattern: /^https:\/\/.*\.(png|jpg|jpeg|svg|gif|webp|ico)$/i,
+                handler: 'CacheFirst',
+                options: {
+                  cacheName: 'images-cache',
+                  expiration: {
+                    maxEntries: 50,
+                    maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+                  }
+                }
+              },
+              {
+                urlPattern: /^https:\/\/.*\.(woff|woff2|ttf|eot)$/i,
+                handler: 'CacheFirst',
+                options: {
+                  cacheName: 'fonts-cache',
+                  expiration: {
+                    maxEntries: 20,
+                    maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+                  }
+                }
+              },
+              {
+                urlPattern: /^https:\/\/.*\.(wav|mp3|ogg)$/i,
+                handler: 'CacheFirst',
+                options: {
+                  cacheName: 'audio-cache',
+                  expiration: {
+                    maxEntries: 20,
+                    maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+                  }
+                }
+              }
+            ]
           }
         })
       ],
