@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Shared';
+import { PWAUpdatePrompt } from './components/PWAUpdatePrompt';
 import Home from './features/Home';
 
 // Lazy-load feature components for better code splitting
@@ -33,6 +34,7 @@ const App: React.FC = () => {
             <Route path="/capitals" element={<Capitals />} />
           </Routes>
         </Suspense>
+        <PWAUpdatePrompt />
       </Layout>
     </HashRouter>
   );
