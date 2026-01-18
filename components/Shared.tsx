@@ -1,13 +1,32 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import ArrowLeft from 'lucide-react/dist/esm/icons/arrow-left';
 import ArrowUp from 'lucide-react/dist/esm/icons/arrow-up';
 import ArrowDown from 'lucide-react/dist/esm/icons/arrow-down';
+import Maximize2 from 'lucide-react/dist/esm/icons/maximize-2';
+import Minimize2 from 'lucide-react/dist/esm/icons/minimize-2';
 import { Link, useLocation } from 'react-router-dom';
 
 // --- Layout ---
 export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const scrollToBottom = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
@@ -35,8 +54,11 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
         {children}
       </main>
 
-      {/* Scroll Controls */}
+      {/* Scroll & Fullscreen Controls */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-2 opacity-50 hover:opacity-100 transition-opacity">
+        <button type="button" onClick={toggleFullscreen} aria-label={isFullscreen ? "Vollbild beenden" : "Vollbild"} className="p-3 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover min-w-[44px] min-h-[44px]">
+          {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+        </button>
         <button type="button" onClick={scrollToTop} aria-label="Nach oben scrollen" className="p-3 bg-surface rounded-full border border-white/10 hover:bg-surfaceHover min-w-[44px] min-h-[44px]">
           <ArrowUp size={20} />
         </button>
