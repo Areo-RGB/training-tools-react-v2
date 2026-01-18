@@ -2,6 +2,7 @@ import { useRef, useCallback, useEffect } from 'react';
 
 export const useAudio = () => {
   const audioContextRef = useRef<AudioContext | null>(null);
+  const activeOscillatorsRef = useRef<Set<OscillatorNode>>(new Set());
 
   const initAudio = useCallback(() => {
     if (!audioContextRef.current) {
@@ -13,6 +14,18 @@ export const useAudio = () => {
     if (audioContextRef.current?.state === 'suspended') {
       audioContextRef.current.resume();
     }
+  }, []);
+
+  const stopAll = useCallback(() => {
+    activeOscillatorsRef.current.forEach(osc => {
+      try {
+        osc.stop();
+        osc.disconnect();
+      } catch (e) {
+        // Already stopped
+      }
+    });
+    activeOscillatorsRef.current.clear();
   }, []);
 
   const playBeep = useCallback((freq = 600, duration = 0.15, vol = 0.5, type: OscillatorType = 'sine') => {
@@ -32,6 +45,15 @@ export const useAudio = () => {
     osc.connect(gain);
     gain.connect(ctx.destination);
 
+    // Track active oscillators
+    activeOscillatorsRef.current.add(osc);
+    
+    osc.onended = () => {
+      activeOscillatorsRef.current.delete(osc);
+      osc.disconnect();
+      gain.disconnect();
+    };
+
     osc.start();
     osc.stop(ctx.currentTime + duration);
   }, [initAudio]);
@@ -47,12 +69,14 @@ export const useAudio = () => {
 
   useEffect(() => {
     return () => {
+      // Stop all active sounds on unmount
+      stopAll();
       if (audioContextRef.current) {
         audioContextRef.current.close();
         audioContextRef.current = null;
       }
     };
-  }, []);
+  }, [stopAll]);
 
-  return { playBeep, playSuccess, playFailure, initAudio };
+  return { playBeep, playSuccess, playFailure, initAudio, stopAll };
 };
