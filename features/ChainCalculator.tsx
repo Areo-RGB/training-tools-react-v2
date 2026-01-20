@@ -164,7 +164,7 @@ const ChainCalculator: React.FC = () => {
 
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] sm:min-h-[60vh] space-y-6 sm:space-y-8 animate-enter">
-        <div className="text-lg sm:text-xl text-textSecondary font-mono flex items-center gap-2">
+        <div className="text-lg sm:text-xl text-textSecondary font-mono flex items-center gap-2 h-8">
           {settings.isInfinite ? (
             <>
               <Infinity size={20} /> Schritt {currentStep}
@@ -179,12 +179,14 @@ const ChainCalculator: React.FC = () => {
         >
           {mainDisplay}
         </div>
-        {showCountdown && (
-          <div className="font-bold tabular-nums text-textSecondary/60" style={{ fontSize: `${settings.fontSize / 2}rem` }}>
-            {countdownValue}
-          </div>
-        )}
-        <div className="flex gap-8 opacity-50 hover:opacity-100 transition-opacity">
+        {/* Fixed height container to prevent layout shift */}
+        <div
+          className="font-bold tabular-nums text-textSecondary/60 overflow-hidden"
+          style={{ fontSize: `${settings.fontSize / 2}rem`, minHeight: `${settings.fontSize / 2}rem`, height: `${settings.fontSize / 2}rem` }}
+        >
+          {showCountdown ? countdownValue : '\u00A0'}
+        </div>
+        <div className="flex gap-8 opacity-50 hover:opacity-100 transition-opacity h-10">
           <button onClick={() => setGameState(GameState.PENDING)} className="text-green-500 font-bold uppercase tracking-wider hover:text-green-400">Fertig</button>
           <button onClick={() => setGameState(GameState.CONFIG)} className="text-red-500 font-bold uppercase tracking-wider hover:text-red-400">Abbruch</button>
         </div>
@@ -194,7 +196,7 @@ const ChainCalculator: React.FC = () => {
 
   if (gameState === GameState.PENDING) {
     return (
-      <div className="max-w-md mx-auto py-8 sm:py-12 animate-enter">
+      <div className="max-w-md mx-auto min-h-[50vh] sm:min-h-[60vh] py-8 sm:py-12 animate-enter flex flex-col justify-center">
         <div className="text-6xl sm:text-7xl md:text-8xl font-bold text-center mb-8 sm:mb-12 text-primary animate-pulse">?</div>
         <div className="bg-surface rounded-2xl p-2 mb-4 border border-white/10">
           <div className="text-3xl sm:text-4xl font-mono text-center py-4 h-16 sm:h-20">{userAnswer}</div>
@@ -215,7 +217,7 @@ const ChainCalculator: React.FC = () => {
 
   if (gameState === GameState.FINISHED) {
     return (
-      <div className="text-center py-8 sm:py-12 animate-enter space-y-6 sm:space-y-8">
+      <div className="text-center min-h-[50vh] sm:min-h-[60vh] py-8 sm:py-12 animate-enter space-y-6 sm:space-y-8 flex flex-col justify-center">
         <div className="text-5xl sm:text-6xl">{isCorrect ? '🎉' : '❌'}</div>
         <h2 className="text-2xl sm:text-3xl font-bold">{isCorrect ? 'Korrekt!' : 'Falsch!'}</h2>
 
