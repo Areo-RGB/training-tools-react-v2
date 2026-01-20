@@ -31,6 +31,7 @@ export interface ColorsSettings {
   soundThreshold: number;
   soundCooldown: number;
   selectedDeviceId: string;
+  isInfinite?: boolean;
 }
 
 export interface ChainCalcSettings {

@@ -8,6 +8,8 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { ColorsSettings, GameState } from '../types';
 import { COLORS_DATA } from '../constants';
 
+const BEEP_SOUND = new Audio('/beep-short.mp3');
+
 const Colors: React.FC = () => {
   const [settings, setSettings] = useLocalStorage<ColorsSettings>('colors-settings', {
     intervalMs: 2000,
@@ -19,6 +21,7 @@ const Colors: React.FC = () => {
     soundThreshold: 50,
     soundCooldown: 500,
     selectedDeviceId: '',
+    isInfinite: true,
   });
 
   const [gameState, setGameState] = useState<GameState>(GameState.CONFIG);
@@ -28,31 +31,56 @@ const Colors: React.FC = () => {
   const [triggerCount, setTriggerCount] = useState(0);
   const [waitingForSound, setWaitingForSound] = useState(false);
 
+  // Refs for stable callbacks
+  const currentColorRef = useRef(currentColor);
+  const settingsRef = useRef(settings);
+  
+  useEffect(() => {
+    currentColorRef.current = currentColor;
+    settingsRef.current = settings;
+  }, [currentColor, settings]);
+
   const { playBeep } = useAudio();
 
-  // Memoize nextColor first as it's used by handleMicTrigger
+  // Memoize nextColor to be stable and avoid effect re-runs
   const nextColor = useCallback(() => {
-    // Stroop effect: Ideally we could show text != color, but the prompt says "colors flash".
-    // Usually Stroop implies mismatch. Let's just pick a random color object.
-    const next = COLORS_DATA[Math.floor(Math.random() * COLORS_DATA.length)];
-    setCurrentColor(next);
-    setStep(s => s + 1);
-    if (settings.playSound) playBeep(600, 0.1);
-  }, [settings.playSound, playBeep]);
+    let next;
+    // Use ref to access current color without adding dependency
+    const currentName = currentColorRef.current.name;
+    const shouldPlaySound = settingsRef.current.playSound;
 
-  // Memoize handleMicTrigger to prevent useMicrophone effect re-runs
+    do {
+      next = COLORS_DATA[Math.floor(Math.random() * COLORS_DATA.length)];
+    } while (next.name === currentName);
+    
+    setCurrentColor(next);
+    setStep(s => s + 1); // Fixed: Was called twice in original code
+    
+    if (shouldPlaySound) {
+      BEEP_SOUND.currentTime = 0;
+      BEEP_SOUND.play().catch(() => {});
+    }
+  }, []);
+
   const handleMicTrigger = useCallback(() => {
-    if (settings.soundControlMode) {
-      if (waitingForSound) {
-        setWaitingForSound(false);
-        nextColor();
-      }
+    const s = settingsRef.current;
+    if (s.soundControlMode) {
+      // We check waitingForSound via state, but we need to ensure we don't trigger if we are not waiting.
+      // Since this callback might be stale if we relied on state, using functional updates or refs is better.
+      // However, waitingForSound is a simple boolean toggle.
+      setWaitingForSound(prev => {
+        if (prev) {
+           nextColor();
+           return false;
+        }
+        return prev;
+      });
     }
 
-    if (settings.useSoundCounter) {
+    if (s.useSoundCounter) {
       setTriggerCount(c => c + 1);
     }
-  }, [settings.soundControlMode, settings.useSoundCounter, waitingForSound, nextColor]);
+  }, [nextColor]);
 
   // Microphone for Sound Control Mode or Overlay Counter
   const isMicActive = gameState === GameState.PLAYING && (settings.soundControlMode || settings.useSoundCounter);
@@ -64,7 +92,24 @@ const Colors: React.FC = () => {
     onTrigger: handleMicTrigger
   });
 
-  // Game Loop
+  // Timer Effect (Separated from Game Loop to prevent resetting on step change)
+  useEffect(() => {
+    if (gameState !== GameState.PLAYING || !settings.soundControlMode) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          setGameState(GameState.FINISHED);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [gameState, settings.soundControlMode]);
+
+  // Game Loop Effect (Step logic)
   useEffect(() => {
     if (gameState !== GameState.PLAYING) return;
 
@@ -73,31 +118,22 @@ const Colors: React.FC = () => {
     if (!settings.soundControlMode) {
       // Time Interval Mode
       intervalId = setInterval(() => {
-        if (step >= settings.limitSteps) {
+        if (!settings.isInfinite && step >= settings.limitSteps) {
           setGameState(GameState.FINISHED);
         } else {
           nextColor();
         }
       }, settings.intervalMs);
     } else {
-      // Sound Control Mode - Wait for trigger logic handled in handleMicTrigger
-      // Just track time duration
-      if (timeLeft <= 0) {
-        setGameState(GameState.FINISHED);
+      // Sound Control Mode logic handled via Mic trigger
+      // Here we just ensure the trigger is armed for the new step
+      if (timeLeft > 0) {
+        setWaitingForSound(true);
       }
-      intervalId = setInterval(() => {
-        setTimeLeft(t => {
-           if (t <= 1) setGameState(GameState.FINISHED);
-           return t - 1;
-        });
-      }, 1000);
-      
-      // Initial trigger wait
-      setWaitingForSound(true);
     }
 
     return () => clearInterval(intervalId);
-  }, [gameState, step, settings.soundControlMode, settings.intervalMs, settings.limitSteps, settings.totalDurationSec, nextColor, timeLeft]);
+  }, [gameState, step, settings.soundControlMode, settings.intervalMs, settings.limitSteps, settings.isInfinite, nextColor]);
 
   const startGame = () => {
     setStep(0);
@@ -165,6 +201,7 @@ const Colors: React.FC = () => {
             
             {!settings.soundControlMode ? (
               <>
+
                  <Slider 
                   label="Intervall (Geschwindigkeit)" 
                   value={settings.intervalMs} 
@@ -172,12 +209,23 @@ const Colors: React.FC = () => {
                   onChange={(v) => setSettings(s => ({...s, intervalMs: v}))}
                   formatValue={(v) => `${(v/1000).toFixed(1)}s`}
                 />
-                <Slider 
-                  label="Anzahl Schritte" 
-                  value={settings.limitSteps} 
-                  min={5} max={100} step={5}
-                  onChange={(v) => setSettings(s => ({...s, limitSteps: v}))}
-                />
+                
+                <div className="space-y-4 pt-2 border-t border-white/5">
+                   <Toggle 
+                      label="Unendlich" 
+                      checked={settings.isInfinite ?? false} 
+                      onChange={(v) => setSettings(s => ({...s, isInfinite: v}))}
+                   />
+                   
+                   {!settings.isInfinite && (
+                      <Slider 
+                        label="Anzahl Schritte" 
+                        value={settings.limitSteps} 
+                        min={5} max={100} step={5}
+                        onChange={(v) => setSettings(s => ({...s, limitSteps: v}))}
+                      />
+                   )}
+                </div>
               </>
             ) : (
                <Slider 
