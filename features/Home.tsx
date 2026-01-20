@@ -15,7 +15,7 @@ const Home: React.FC = () => {
         <p className="text-textSecondary font-bold uppercase tracking-[0.2em] text-sm">Training Tools Collection</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
         {TOOLS.map((tool, index) => {
           const Icon = tool.icon;
           return (
